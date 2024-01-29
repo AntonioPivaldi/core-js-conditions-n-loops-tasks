@@ -417,8 +417,43 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const sortedArr = arr;
+
+  function customSort(newArr, startPos = 0, endPos = newArr.length - 1) {
+    const center = newArr[Math.floor((startPos + endPos) / 2)];
+
+    let start = startPos;
+    let end = endPos;
+
+    while (start < end) {
+      while (newArr[start] < center) {
+        start += 1;
+      }
+
+      while (center < newArr[end]) {
+        end -= 1;
+      }
+
+      if (end >= start) {
+        [sortedArr[start], sortedArr[end]] = [newArr[end], newArr[start]];
+        start += 1;
+        end -= 1;
+      }
+    }
+
+    if (startPos < end) {
+      customSort(newArr, startPos, end);
+    }
+
+    if (start < endPos) {
+      customSort(newArr, start, endPos);
+    }
+  }
+
+  customSort(sortedArr);
+
+  return sortedArr;
 }
 
 /**
@@ -438,8 +473,33 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+
+function shuffleChar(str, n) {
+  let result = str;
+  let nLeft = n;
+
+  while (nLeft) {
+    let left = '';
+    let right = '';
+
+    for (let i = 0; i < result.length; i += 1) {
+      const char = result[i];
+      if (i % 2) {
+        right += char;
+      } else {
+        left += char;
+      }
+    }
+
+    nLeft -= 1;
+    result = left + right;
+
+    if (result === str) {
+      nLeft = n % (n - nLeft);
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -459,8 +519,32 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+
+// Yes, I'm a dogwater ...
+
+function getNearestOverride(n) {
+  const original = `${n}`.split('').sort().join('');
+  let fake = n;
+  let isConsist = false;
+  let result;
+
+  while (!isConsist) {
+    fake += 1;
+    if (`${fake}`.split('').sort().join('') === original) {
+      isConsist = true;
+      result = fake;
+    }
+  }
+
+  return result;
+}
+
+function getNearestBigger(n) {
+  if (n <= 11) {
+    return n;
+  }
+
+  return getNearestOverride(n);
 }
 
 module.exports = {
